@@ -1,29 +1,33 @@
 public class matter {
 
+    boolean end = false;//kill loop kept outside to keep it more applicable in the future
+
     public double myPosition = 0;
     public double myVelocity = 0;
-    public double myAcceleration;
+    public double myAcceleration = 1;
     public double force = 1;
     public double mass = 2;
+    public String name = "";
 
-    public void matter(){}
+    public matter(){}
 
     //allternate constructor that fills in values;
-    public void matter(double myPos, double myVel, double myAcc, double _mass){
-        myPosition = myPos;
-        myVelocity = myVel;
-        myAcceleration = myAcc;
-        mass = _mass;
+    public matter(double _pos){
+        myPosition = _pos;
     }
     
     //changes position based on velocity
-    public void updatePosition(){
-        myPosition += myVelocity;
+    public void updatePosition(double dt){
+        myPosition += myVelocity*dt;
+    }
+
+    public void setName(String _name){
+        name = _name;
     }
 
     //changes velocity based on acceleration
-    public void updateVelocity(){
-        myVelocity += myAcceleration;
+    public void updateVelocity(double dt){
+        myVelocity += myAcceleration*dt;
     }
 
     //changes acceleration based on Newton's 2nd law
@@ -31,7 +35,18 @@ public class matter {
         myAcceleration = force/mass;
     }
 
+    public void update(double dt){
+        updateAcceleration();
+        updateVelocity(dt);
+        updatePosition(dt);
+        System.out.println(this);
+
+        if(myPosition > 10){
+            end = true;
+        }
+    }
+
     public String toString(){
-        return "position is: " + myPosition + ", velocity is: " + myVelocity + ", and acceleration is: " + myAcceleration;
+        return name + "'s position is: " + myPosition + ".";
     }
 }

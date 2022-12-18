@@ -1,26 +1,33 @@
 public class simulation {
+
     public static void main(String[] args){
 
-        boolean end = false;//kill loop kept outside to keep it more applicable in the future
-
-        matter me = new matter();
+        matter me = new matter(10);
         matter you = new matter();
-        you.force = -me.force;//Newton's third law
+        matter him = new matter(20);
 
-        while(!end){
-            me.updateAcceleration();
-            me.updatePosition();
-            me.updateVelocity();
-            System.out.println("Me ::  " + me);
+        me.setName("Me");
+        you.setName("You");
+        him.setName("Him");
 
-            you.updateAcceleration();
-            you.updatePosition();
-            you.updateVelocity();
-            System.out.println("You ::  " + you);
+        double dt = 0.1;
 
-            if(me.myPosition > 10){
-                end = true;
-            }
+        while(!me.end){
+            //newtons third law
+            me.force = computeForce(me, you);
+            you.force = computeForce(you,me);
+            him.force = computeForce(him,me);
+            him.force += computeForce(him,you);
+            me.force += computeForce(me, him);
+            you.force += computeForce(you,him);
+
+            me.update(dt);
+            you.update(dt);
+            him.update(dt);
         }
+    }
+
+    public static double computeForce(matter a, matter b){
+        return b.myPosition - a.myPosition;
     }
 }
